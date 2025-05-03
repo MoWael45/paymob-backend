@@ -1,15 +1,26 @@
     const axios = require('axios');
 
     export default async function handler(req, res) {
-    const { amount, paymentMethod } = req.body;
-    const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY || "default_key_for_testing";
-    console.log("PAYMOB_SECRET_KEY:", PAYMOB_SECRET_KEY);
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    const { amount, paymentMethod } = req.body || {};
+    if (!amount || !paymentMethod) {
+        return res.status(400).json({ error: 'Missing amount or paymentMethod' });
+    }
+
+    const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY;
+    if (!PAYMOB_SECRET_KEY) {
+        return res.status(500).json({ error: 'Server configuration error' });
+    }
+
     const CARD_INTEGRATION_ID = 5066065;
     const MOBILE_WALLET_INTEGRATION_ID = 5066086;
     const PAYMOB_API_URL = 'https://accept.paymob.com';
 
     try {
-        const amountCents = Math.round(amount);
+        const amountCents = Math.round(amount * 100); // Convert to cents if needed
         const integrationId = paymentMethod === 'card' ? CARD_INTEGRATION_ID : MOBILE_WALLET_INTEGRATION_ID;
 
         const response = await axios.post(`${PAYMOB_API_URL}/v1/intention/`, {
@@ -40,7 +51,7 @@
         order_id: response.data.intention_order_id,
         });
     } catch (error) {
-        console.error('Error:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'Failed to create payment' });
+        console.error('Error details:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to create payment', details: error.message });
     }
     }
