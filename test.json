@@ -1,0 +1,22 @@
+{
+  "amount": 1000,
+  "currency": "EGP",
+  "paymentMethodId": "5066065",
+  "items": [
+    {
+      "name": "Test Item",
+      "quantity": 1,
+      "amount": 1000,
+      "description": "Test Description"
+    }
+  ],
+  "billingData": {
+    "first_name": "Test",
+    "last_name": "User",
+    "phone_number": "01010101010",
+    "email": "test@paymob.com",
+    "street": "NA",
+    "city": "Cairo",
+    "country": "EGY"
+  }
+}
