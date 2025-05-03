@@ -2,7 +2,8 @@
 
     export default async function handler(req, res) {
     const { amount, paymentMethod } = req.body;
-    const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY;
+    const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY || "default_key_for_testing";
+    console.log("PAYMOB_SECRET_KEY:", PAYMOB_SECRET_KEY);
     const CARD_INTEGRATION_ID = 5066065;
     const MOBILE_WALLET_INTEGRATION_ID = 5066086;
     const PAYMOB_API_URL = 'https://accept.paymob.com';
